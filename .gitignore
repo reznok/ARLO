@@ -7,6 +7,10 @@
 
 # Exclude GMC Plugin (Paid Asset)
 Plugins/GMC/*
+
+# Exclude GAS Companion (Paid Asset)
+Plugins/GASCompanion/*
+
 Plugins/Developer/*
 
 # Exclude personal Devlog

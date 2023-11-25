@@ -15,6 +15,9 @@ AALHero::AALHero()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	MovementComponent = CreateDefaultSubobject<UALMovementComponent>(TEXT("ALMovementComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<UGSCAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 void AALHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -34,12 +37,6 @@ void AALHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AALHero::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	MovementComponent = GetComponentByClass<UALMovementComponent>();
-	if (MovementComponent == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Movement component found on Actor"));
-	}
 
 	if (AGMC_PlayerController* PlayerController = Cast<AGMC_PlayerController>(GetController()))
 	{

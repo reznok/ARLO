@@ -1,6 +1,11 @@
 ﻿#include "ALMovementComponent.h"
 
 
+bool UALMovementComponent::CanJump()
+{
+	return (bIsGrounded || ExtraJumpChargesRemaining > 0);
+}
+
 void UALMovementComponent::CheckIsGrounded()
 {
 	FCollisionQueryParams QueryParams;
@@ -31,11 +36,8 @@ void UALMovementComponent::CheckIsGrounded()
 
 void UALMovementComponent::ApplyGravity(float DeltaTime)
 {
-	if (bIsGrounded)
+	if (!bIsGrounded)
 	{
-		Velocity.Z = 0.f;
-	}
-	else{
 		// Add gravity acceleration
 		// Need DeltaTime as it's a rate of change
 		UpdateVelocity(FVector(0, 0, Velocity.Z + Gravity * DeltaTime));
@@ -126,15 +128,14 @@ void UALMovementComponent::GenPredictionTick_Implementation(float DeltaTime)
 
 void UALMovementComponent::Jump()
 {
-	if (bIsGrounded || ExtraJumpChargesRemaining > 0)
-	{
-		// Overwrite vertical velocity with jump force
-		UpdateVelocity(FVector(Velocity.X, 0, JumpForce));
+	if (!CanJump()) return;
+	
+	// Overwrite vertical velocity with jump force
+	UpdateVelocity(FVector(Velocity.X, 0, JumpForce));
 
-		// Double jumping
-		if (!bIsGrounded && ExtraJumpChargesRemaining > 0)
-		{
-			ExtraJumpChargesRemaining -= 1;
-		}
+	// Double jumping
+	if (!bIsGrounded && ExtraJumpChargesRemaining > 0)
+	{
+		ExtraJumpChargesRemaining -= 1;
 	}
 }

@@ -18,13 +18,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MaxHorizontalMoveSpeed = 600.f;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float JumpForce = 1000.f;
 
 	UPROPERTY(EditAnywhere)
 	float Gravity = -1700.f;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	bool bWantsToJump;
 
 	UPROPERTY()
@@ -36,6 +36,9 @@ public:
 	
 	UPROPERTY()
 	int ExtraJumpChargesRemaining = 0;
+
+	UFUNCTION(BlueprintCallable)
+	bool CanJump();
 
 private:
 	void CheckIsGrounded();
