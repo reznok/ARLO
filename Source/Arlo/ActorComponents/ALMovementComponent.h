@@ -30,6 +30,13 @@ public:
 	UPROPERTY()
 	bool bIsGrounded;
 
+	// How many extra jumps the character has. This doesn't include jumping from a surface.
+	UPROPERTY(EditAnywhere)
+	int ExtraJumpCharges = 1;
+	
+	UPROPERTY()
+	int ExtraJumpChargesRemaining = 0;
+
 private:
 	void CheckIsGrounded();
 	void ApplyGravity(float DeltaTime);

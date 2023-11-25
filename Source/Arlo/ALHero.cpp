@@ -23,7 +23,7 @@ void AALHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AALHero::OnJumpAction);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AALHero::OnJumpAction);
 
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &AALHero::OnMoveRightAction);
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Completed, this, &AALHero::OnMoveRightAction);

@@ -22,6 +22,7 @@ void UALMovementComponent::CheckIsGrounded()
 		if (GroundHit.bBlockingHit && IsValid(GroundHit.GetActor()))
 		{
 			bIsGrounded = true;
+			ExtraJumpChargesRemaining = ExtraJumpCharges;
 			return;
 		}
 	}
@@ -125,9 +126,15 @@ void UALMovementComponent::GenPredictionTick_Implementation(float DeltaTime)
 
 void UALMovementComponent::Jump()
 {
-	if (bIsGrounded)
+	if (bIsGrounded || ExtraJumpChargesRemaining > 0)
 	{
 		// Overwrite vertical velocity with jump force
 		UpdateVelocity(FVector(Velocity.X, 0, JumpForce));
+
+		// Double jumping
+		if (!bIsGrounded && ExtraJumpChargesRemaining > 0)
+		{
+			ExtraJumpChargesRemaining -= 1;
+		}
 	}
 }
