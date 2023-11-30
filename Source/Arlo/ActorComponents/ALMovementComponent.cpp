@@ -66,6 +66,13 @@ void UALMovementComponent::ApplyMovementInputs()
 	
 }
 
+void UALMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Attributes = static_cast<FGMCAttributeSet>(FALAttributes{});
+}
+
 void UALMovementComponent::BindReplicationData_Implementation()
 {
 	Super::BindReplicationData_Implementation();
@@ -76,20 +83,23 @@ void UALMovementComponent::BindReplicationData_Implementation()
 		EGMC_CombineMode::CombineIfUnchanged,
 		EGMC_SimulationMode::Periodic_Output,
 		EGMC_InterpolationFunction::Linear);
-	
+
 	BindBool( bWantsToJump,
 		EGMC_PredictionMode::ClientAuth_Input,
 		EGMC_CombineMode::CombineIfUnchanged,
 		EGMC_SimulationMode::Periodic_Output,
-		EGMC_InterpolationFunction::Linear);
+		EGMC_InterpolationFunction::NearestNeighbour);
 
-	// Server Auth
+	//// Server Auth
 	BindBool( bIsGrounded,
 		EGMC_PredictionMode::ServerAuth_Output_ClientValidated,
 		EGMC_CombineMode::CombineIfUnchanged,
 		EGMC_SimulationMode::Periodic_Output,
-		EGMC_InterpolationFunction::Linear);
-}
+		EGMC_InterpolationFunction::NearestNeighbour);
+
+	// Attributes
+
+	}
 
 void UALMovementComponent::GenPredictionTick_Implementation(float DeltaTime)
 {
@@ -102,17 +112,12 @@ void UALMovementComponent::GenPredictionTick_Implementation(float DeltaTime)
 	ApplyGravity(DeltaTime);
 	ApplyMovementInputs();
 	
-	if (bWantsToJump)
-	{
-		Jump();
-		bWantsToJump = false;
-	}
-
-	// Move Actor
+	// Move Actor based on its velocity
 	const FVector NewLocation = GetOwner()->GetActorLocation() + Velocity * DeltaTime;
 	FHitResult OutHit(1.f);
 	GetOwner()->SetActorLocation(NewLocation, true, &OutHit, ETeleportType::None);
 	
+	// Slide along surfaces
 	if (OutHit.bBlockingHit)
 	{
 		FVector SlidingVector = ComputeSlideVector(Velocity * DeltaTime,(1.f - OutHit.Time), OutHit.Normal, OutHit);
@@ -124,18 +129,4 @@ void UALMovementComponent::GenPredictionTick_Implementation(float DeltaTime)
 	// Without this, things like bonking your head into a platform would be very floaty as gravity
 	// slowly pulls down the velocity.
 	Velocity = (GetOwner()->GetActorLocation() - OldLocation) / DeltaTime;
-}
-
-void UALMovementComponent::Jump()
-{
-	if (!CanJump()) return;
-	
-	// Overwrite vertical velocity with jump force
-	UpdateVelocity(FVector(Velocity.X, 0, JumpForce));
-
-	// Double jumping
-	if (!bIsGrounded && ExtraJumpChargesRemaining > 0)
-	{
-		ExtraJumpChargesRemaining -= 1;
-	}
 }

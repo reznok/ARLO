@@ -10,6 +10,6 @@ public class Arlo : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "EnhancedInput" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GMCCore", "GASCompanion" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GMCCore", "GMCAbilitySystem"});
 	}
 }

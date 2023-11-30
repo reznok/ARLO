@@ -6,7 +6,6 @@
 #include "EnhancedInputSubsystemInterface.h"
 #include "GMCPawn.h"
 #include "InputAction.h"
-#include "Abilities/GSCAbilitySystemComponent.h"
 #include "ActorComponents/ALMovementComponent.h"
 #include "GameFramework/Actor.h"
 #include "ALHero.generated.h"
@@ -34,15 +33,16 @@ protected:
 	UInputAction* JumpAction = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	UInputAction* TeleportAction = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* MoveRightAction = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UALMovementComponent* MovementComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UGSCAbilitySystemComponent* AbilitySystemComponent;
-
 	void OnJumpAction(const FInputActionValue& Value);
+	void OnTeleportAction(const FInputActionValue& Value);
 	void OnMoveRightAction(const FInputActionValue& Value);
 
 public:
